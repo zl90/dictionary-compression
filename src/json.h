@@ -8,5 +8,5 @@ namespace json
 {
     std::vector<std::string> parse(std::string);
 
-    void encode(std::unordered_map<std::string, std::string>);
+    void encode(const std::unordered_map<std::string, std::string> &, std::string, std::string);
 }

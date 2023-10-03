@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #define INPUT_FILENAME "input.json"
+#define OUTPUT_FILENAME "output.json"
 
 int main()
 {
@@ -16,12 +17,7 @@ int main()
 
         std::unordered_map<std::string, std::string> dictionary = dict_compression::build_dictionary(frequencies);
 
-        for (const auto &pair : dictionary)
-        {
-            std::cout << pair.first << ": " << pair.second << std::endl;
-        }
-
-        std::cout << dictionary.size() << std::endl;
+        json::encode(dictionary, INPUT_FILENAME, OUTPUT_FILENAME);
 
         return 0;
     }
