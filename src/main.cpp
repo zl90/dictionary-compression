@@ -14,15 +14,14 @@ int main()
 
         std::unordered_map<std::string, int> frequencies = dict_compression::map_token_frequencies(tokens);
 
-        for (const auto &pair : frequencies)
+        std::unordered_map<std::string, std::string> dictionary = dict_compression::build_dictionary(frequencies);
+
+        for (const auto &pair : dictionary)
         {
-            if (pair.second > 10)
-            {
-                std::cout << pair.first << ": " << pair.second << std::endl;
-            }
+            std::cout << pair.first << ": " << pair.second << std::endl;
         }
 
-        std::cout << frequencies.size() << std::endl;
+        std::cout << dictionary.size() << std::endl;
 
         return 0;
     }
