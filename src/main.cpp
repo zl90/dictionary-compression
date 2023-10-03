@@ -1,4 +1,4 @@
-#include "json_lexer.h"
+#include "json.h"
 #include "dictionary_compression.h"
 #include <iostream>
 #include <unordered_map>
@@ -10,9 +10,7 @@ int main()
     try
     {
         std::vector<std::string> tokens;
-        tokens = json_lexer::parse(INPUT_FILENAME);
-
-        std::cout << tokens.size() << std::endl;
+        tokens = json::parse(INPUT_FILENAME);
 
         std::unordered_map<std::string, int> frequencies = dict_compression::map_token_frequencies(tokens);
 
@@ -23,6 +21,8 @@ int main()
                 std::cout << pair.first << ": " << pair.second << std::endl;
             }
         }
+
+        std::cout << frequencies.size() << std::endl;
 
         return 0;
     }

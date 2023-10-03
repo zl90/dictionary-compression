@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-namespace json_lexer
+namespace json
 {
     std::vector<std::string> parse(std::string);
 }

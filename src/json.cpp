@@ -1,9 +1,9 @@
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
-#include "json_lexer.h"
+#include "json.h"
 
-std::vector<std::string> json_lexer::parse(std::string path)
+std::vector<std::string> json::parse(std::string path)
 {
     try
     {
