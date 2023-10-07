@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #define INPUT_FILENAME "input.json"
-#define OUTPUT_FILENAME "output.json"
+#define OUTPUT_FILENAME "output"
 
 int main()
 {

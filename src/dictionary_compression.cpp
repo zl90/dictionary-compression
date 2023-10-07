@@ -27,15 +27,13 @@ std::unordered_map<std::string, std::string> dict_compression::build_dictionary(
 {
     std::unordered_map<std::string, std::string> output;
 
-    // TODO: these need to be computed, not static
-    const u_short MIN_TOKEN_LENGTH = 7;
-    const u_short LARGE_TOKEN_LENGTH = 32;
+    const u_short MIN_TOKEN_LENGTH = 7; // We can't encode tokens that are smaller than our hash length because we wouldn't be saving space
 
     for (const auto &pair : input)
     {
         const std::string &key = pair.first;
         const int value = pair.second;
-        if ((value > 1 && key.length() >= MIN_TOKEN_LENGTH) || (key.length() > LARGE_TOKEN_LENGTH))
+        if ((value > 1 && key.length() >= MIN_TOKEN_LENGTH))
         {
             const std::size_t hash = std::hash<std::string>{}(key) % static_cast<int>(std::pow(10.0, static_cast<double>(MIN_TOKEN_LENGTH)));
 

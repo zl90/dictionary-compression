@@ -119,6 +119,17 @@ void json::encode(const std::unordered_map<std::string, std::string> &dictionary
             }
         }
 
+        // Append the dictionary to the file as CSV
+        const char dictionary_delimiter = 0b00011111; // ascii unit separator
+        output << dictionary_delimiter;
+        for (auto i = dictionary.begin(); i != dictionary.end(); i++)
+        {
+            const std::string key = i->first;
+            const std::string hash = i->second;
+
+            output << '"' + key + '"' + ',' + '"' + hash + '"' + '\n';
+        }
+
         output.close();
         input.close();
     }
