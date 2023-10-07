@@ -19,26 +19,55 @@ std::vector<std::string> json::parse(std::string path)
         bool in_word = false;
         std::string next_word = "";
 
+        bool erroneous = false;
+        bool erroneous_prev = false;
+
+        bool in_escape = false;
+
         while (file.get(next_char))
         {
             if (!in_word && next_char == '"')
             {
                 in_word = true;
             }
-            else if (in_word && next_char == '"')
-            {
-                in_word = false;
-
-                if (next_word.size() > 0)
-                {
-                    output.push_back(next_word);
-                }
-
-                next_word = "";
-            }
             else if (in_word)
             {
-                next_word += next_char;
+                if (in_escape)
+                {
+                    // Handle escape sequences
+                    in_escape = false;
+                    if (next_char == 'n')
+                    {
+                        next_word += '\n';
+                    }
+                    else if (next_char == 't')
+                    {
+                        next_word += '\t';
+                    }
+                    else if (next_char == '"')
+                    {
+                        next_word += '"';
+                    }
+                    else if (next_char == '\\')
+                    {
+                        next_word += '\\';
+                    }
+                }
+                else if (next_char == '\\')
+                {
+                    // Start of an escape sequence
+                    in_escape = true;
+                }
+                else if (next_char == '"')
+                {
+                    in_word = false;
+                    output.push_back(next_word);
+                    next_word = "";
+                }
+                else
+                {
+                    next_word += next_char;
+                }
             }
         }
 
@@ -82,36 +111,54 @@ void json::encode(const std::unordered_map<std::string, std::string> &dictionary
             {
                 in_word = true;
             }
-            else if (in_word && next_char == '"')
+            else if (in_word)
             {
-                in_word = false;
-
-                if (next_word.size() > 0)
+                if (next_char == '\\')
                 {
-                    auto existing_key = dictionary.find(next_word);
+                    // Handle escape sequences
+                    next_word += next_char; // Add the backslash
 
-                    if (existing_key != dictionary.end())
+                    if (input.get(next_char))
                     {
-                        // hashable word found, write the hash
-                        std::string hash = existing_key->second;
-                        output << '"' + hash + '"';
+                        next_word += next_char; // Add the escaped character
                     }
                     else
                     {
-                        // non-hashable word, write the original word
-                        output << '"' + next_word + '"';
+                        // Handle unexpected end of input
+                        break;
                     }
+                }
+                else if (next_char == '"')
+                {
+                    in_word = false;
+
+                    if (!next_word.empty())
+                    {
+                        auto existing_key = dictionary.find(next_word);
+
+                        if (existing_key != dictionary.end())
+                        {
+                            // Hashable word found, write the hash
+                            std::string hash = existing_key->second;
+                            output << '"' << hash << '"';
+                        }
+                        else
+                        {
+                            // Non-hashable word, write the original word
+                            output << '"' << next_word << '"';
+                        }
+                    }
+                    else
+                    {
+                        output << "\"\"";
+                    }
+
+                    next_word = "";
                 }
                 else
                 {
-                    output << '"' + '"';
+                    next_word += next_char;
                 }
-
-                next_word = "";
-            }
-            else if (in_word)
-            {
-                next_word += next_char;
             }
             else
             {
