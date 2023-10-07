@@ -33,7 +33,7 @@ std::unordered_map<std::string, std::string> dict_compression::build_dictionary(
     {
         const std::string &key = pair.first;
         const int value = pair.second;
-        if ((value > 1 && key.length() >= MIN_TOKEN_LENGTH))
+        if ((value > 1 && key.length() > MIN_TOKEN_LENGTH))
         {
             const std::size_t hash = std::hash<std::string>{}(key) % static_cast<int>(std::pow(10.0, static_cast<double>(MIN_TOKEN_LENGTH)));
 
